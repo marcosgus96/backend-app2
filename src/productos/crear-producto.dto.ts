@@ -1,6 +1,8 @@
 
 export class CrearProductoDto {
-    readonly nombre: string;
-    readonly descripcion: string;
+    nombre: string;
+    descripcion: string;
+    precio: number;
+    enStock?: boolean;
   }
   

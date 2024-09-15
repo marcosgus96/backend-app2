@@ -1,30 +1,35 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Producto } from './producto.entity';
 import { CrearProductoDto } from './crear-producto.dto';
 
-export interface Producto {
-    id: number;
-    nombre: string;
-    descripcion: string;
-  }
 @Injectable()
 export class ProductosService {
-    private users: Producto[] = [];
-    private idCounter = 1;
+  constructor(
+    @InjectRepository(Producto)
+    private productRepository: Repository<Producto>,
+  ) {}
 
-    findAll(): Producto[] {
-        return this.users;
-    }
+  findAll(): Promise<Producto[]> {
+    return this.productRepository.find();
+  }
 
-    findOne(id: number): Producto {
-        return this.users.find(user => user.id === id);
-    }
+  findOne(id: number): Promise<Producto> {
+    return this.productRepository.findOneBy({ id });
+  }
 
-    create(createUserDto: CrearProductoDto): Producto {
-        const newProducto: Producto = {
-        id: this.idCounter++,
-        ...createUserDto,
-    };
-    this.users.push(newProducto);
-    return newProducto;
+  create(createProductDto: CrearProductoDto): Promise<Producto> {
+    const newProduct = this.productRepository.create(createProductDto);
+    return this.productRepository.save(newProduct);
+  }
+
+  async update(id: number, updateProductDto: CrearProductoDto): Promise<Producto> {
+    await this.productRepository.update(id, updateProductDto);
+    return this.productRepository.findOneBy({ id });
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.productRepository.delete(id);
   }
 }
