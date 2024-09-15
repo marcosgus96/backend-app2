@@ -10,9 +10,21 @@ export class ProductosService {
     @InjectRepository(Producto)
     private productRepository: Repository<Producto>,
   ) {}
-
+    /* Devuelve todos los productos
   findAll(): Promise<Producto[]> {
     return this.productRepository.find();
+  }   
+  */
+  async findAll(page: number = 1, limit: number = 10): Promise<{ data: Producto[], total: number }> {
+    const [data, total] = await this.productRepository.findAndCount({
+      take: limit,  // Número de productos a mostrar por página
+      skip: (page - 1) * limit,  // Productos a omitir para paginación
+    });
+
+    return {
+      data,
+      total,
+    };
   }
 
   findOne(id: number): Promise<Producto> {
