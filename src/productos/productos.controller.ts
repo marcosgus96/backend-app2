@@ -1,30 +1,23 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { CrearProductoDto } from './crear-producto.dto';
+import { Producto, ProductosService } from './productos.service';
 
 @Controller('productos')
 export class ProductosController {
+  constructor(private readonly productosServices: ProductosService) {}
+
   @Get()
-  findAll(): string {
-    return 'Esta accion devoler los prductos';
+  findAll(): Producto[] {
+    return this.productosServices.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): string {
-    return `Esta accion devuelve un producto: ${id}`;
-  }
-
-  @Put(':id')
-  update(): string {
-    return 'Esta accion actualiza los productos prueba';
-  }
-
-  @Delete(':id')
-  remove(): string {
-    return 'Esta accion elemina un producto';
+  findOne(@Param('id') id: string): Producto {
+    return this.productosServices.findOne(Number(id));
   }
 
   @Post()
-  create(@Body() crearProductoDto: any): string {
-    return `Esta accion guarda un producto: ${JSON.stringify(crearProductoDto)}`;
+  create(@Body() createUserDto: CrearProductoDto): Producto {
+    return this.productosServices.create(createUserDto);
   }
-
 }
