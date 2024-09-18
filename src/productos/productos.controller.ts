@@ -1,11 +1,14 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query, UseGuards } from '@nestjs/common';
 import { CrearProductoDto } from './crear-producto.dto';
 import { ProductosService } from './productos.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('productos')
 export class ProductosController {
   constructor(private readonly productService: ProductosService) {}
 
+
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(
     @Query('page') page: number = 1,  // Parámetro de página, valor por defecto: 1
