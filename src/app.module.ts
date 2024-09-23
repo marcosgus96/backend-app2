@@ -10,6 +10,7 @@ import { CategoriaModule } from './categoria/categoria.module';
 import { Categoria } from './categoria/categoria.entity';
 import { UsuarioModule } from './usuario/usuario.module';
 import { AuthModule } from './auth/auth.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [ProductosModule,
@@ -25,7 +26,8 @@ import { AuthModule } from './auth/auth.module';
     }),
     CategoriaModule,
     UsuarioModule,
-    AuthModule],
+    AuthModule,
+    OrderModule],
   controllers: [AppController],
   providers: [AppService],
 })

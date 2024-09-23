@@ -2,13 +2,17 @@ import { Controller, Get, Post, Put, Delete, Param, Body, Query, UseGuards } fro
 import { CrearProductoDto } from './crear-producto.dto';
 import { ProductosService } from './productos.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from 'src/auth/roles.decorator';
+import { Role } from 'src/auth/role.enum';
 
 @Controller('productos')
 export class ProductosController {
   constructor(private readonly productService: ProductosService) {}
 
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.User) // Solo accesible para admin y user
   @Get()
   async findAll(
     @Query('page') page: number = 1,  // Parámetro de página, valor por defecto: 1
@@ -29,6 +33,8 @@ export class ProductosController {
     return this.productService.findOne(Number(id));
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin) // Solo accesible para admin
   @Post()
   create(@Body() createProductDto: CrearProductoDto) {
     return this.productService.create(createProductDto);

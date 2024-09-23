@@ -1,11 +1,17 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from '@nestjs/common';
 import { CategoriaService } from './categoria.service';
 import { Categoria } from './categoria.entity';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from 'src/auth/roles.decorator';
+import { Role } from 'src/auth/role.enum';
 
 @Controller('categorias')
 export class CategoriaController {
   constructor(private readonly categoryService: CategoriaService) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.User) // Solo accesible para admin
   @Get()
   findAll() {
     return this.categoryService.findAll();
